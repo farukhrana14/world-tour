@@ -1,30 +1,37 @@
 fetch('https://restcountries.eu/rest/v2/all')
     .then(res => res.json())
-    .then(data => displayCountries(data));
+    .then(data => {
+        // console.log(data[0].flag)
+        displayCountries(data)
+    });
 
 
 function displayCountries(countries) {
     const allCountries = document.getElementById("all-countries");
-
-    countries.forEach(country => {
+        countries.forEach(country => {
         const countryDiv = document.createElement("div");
         countryDiv.className = 'country';
         const countryInfo = `
             <h3 class="country-name">${country.name}</h3>
             <p id="capital-name">${country.capital}</p>
-            <button onclick='displayCountryDetails("${country.name}")'>Details</button>
+            <button id="detailButton" onclick='displayCountryDetails("${country.name}")'>Details</button>
         `
+        countryDiv.style.backgroundImage = `url(${country.flag})`;
+        countryDiv.style.filter= "sepia(60%)";
         countryDiv.innerHTML = countryInfo;
         allCountries.appendChild(countryDiv);
     });
 }
 
 const displayCountryDetails = name => {
-    // const url = `https://restcountries.eu/rest/v2/name/${name}` 
     fetch(`https://restcountries.eu/rest/v2/name/${name}`)
         .then(res => res.json())
-        .then(data => renderCountryInfo(data[0]));
+        .then(data => {
+            renderCountryInfo(data[0])
+            window.scrollTo(0,0);
+        });
 }
+
 
 const renderCountryInfo = country => {
     const renderDiv = document.getElementById("country-details");
@@ -33,12 +40,8 @@ const renderCountryInfo = country => {
     <p>Population: ${country.population}</p>
     <p>Area: ${country.area}</p>
     <img src="${country.flag}"></img>
-    
-    `
-
-
+`
 }
-
 
 
 // function displayCountries(countries) {
